@@ -1,0 +1,18 @@
+# Dependencias de Node
+node_modules/
+
+# Variables de entorno 
+.env
+
+# Archivos de "Base de Datos" JSON
+data/articulos.json
+data/auditoria.json
+
+# Archivos de logs 
+logs
+*.log
+npm-debug.log*
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
