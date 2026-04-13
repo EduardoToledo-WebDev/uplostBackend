@@ -1,10 +1,10 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config(); // Indispensable para leer el .env
-
+const cors = require('cors');
 const app = express();
 app.use(express.json());
-
+app.use(cors());
 // ==========================================
 // 1. CONFIGURACIÓN DEL RATE LIMIT
 // ==========================================
@@ -42,7 +42,8 @@ const verificarApiKey = (req, res, next) => {
 // ==========================================
 // 3. RUTAS PROTEGIDAS
 // ==========================================
-const articulosRoutes = require('./router/routes');
+const articulosRoutes = require('./router/routes.js');
+// Middleware para configurar CSP y permitir conexiones de desarrollo
 
 // Al poner 'verificarApiKey' aquí, proteges TODAS las rutas de artículos
 app.use('/api', verificarApiKey, articulosRoutes);
