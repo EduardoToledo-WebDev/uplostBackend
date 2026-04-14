@@ -1,19 +1,30 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
-require('dotenv').config(); // Indispensable para leer el .env
+require('dotenv').config();
 const cors = require('cors');
+const path = require('path');
+
 const app = express();
+
+// ==========================================
+// 0. MIDDLEWARES BÁSICOS Y CARPETAS PÚBLICAS
+// ==========================================
 app.use(express.json());
 app.use(cors());
+
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 // ==========================================
 // 1. CONFIGURACIÓN DEL RATE LIMIT
 // ==========================================
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // Tiempo: 15 minutos
-    max: 1000, // Límite: 100 peticiones por IP en esos 15 minutos
+    max: 1000, // Límite: 1000 peticiones por IP en esos 15 minutos
     message: {
         error: "Too Many Requests",
-        mensaje: "Calma lince, estás haciendo demasiadas peticiones. Intenta en 15 minutos."
+        mensaje: " Estás haciendo demasiadas peticiones. Intenta en 15 minutos."
     }
 });
 
@@ -39,16 +50,23 @@ const verificarApiKey = (req, res, next) => {
     next(); // Si la llave es correcta, deja pasar la petición
 };
 
+
 // ==========================================
 // 3. RUTAS PROTEGIDAS
 // ==========================================
 const articulosRoutes = require('./router/routes.js');
-// Middleware para configurar CSP y permitir conexiones de desarrollo
 
 // Al poner 'verificarApiKey' aquí, proteges TODAS las rutas de artículos
+// Ahora todas tus rutas colgarán de /api (ej. /api/articulos)
 app.use('/api', verificarApiKey, articulosRoutes);
 
-// Iniciar servidor
-app.listen(3000, () => {
-    console.log("Servidor corriendo en puerto 3000");
+
+// ==========================================
+// 4. INICIAR SERVIDOR
+// ==========================================
+// Es buena práctica usar process.env.PORT por si lo subes a la nube (como Render o Heroku)
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en puerto ${PORT}`);
 });
