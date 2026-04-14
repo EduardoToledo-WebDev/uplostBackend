@@ -10,7 +10,7 @@ app.use(cors());
 // ==========================================
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // Tiempo: 15 minutos
-    max: 100, // Límite: 100 peticiones por IP en esos 15 minutos
+    max: 1000, // Límite: 100 peticiones por IP en esos 15 minutos
     message: {
         error: "Too Many Requests",
         mensaje: "Calma lince, estás haciendo demasiadas peticiones. Intenta en 15 minutos."
