@@ -3,7 +3,7 @@ const path = require("path");
 const multer = require("multer");
 const { Resend } = require("resend");
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 const DIR_DATA = "./data";
 const PATH_ARTICULOS = "./data/articulos.json";
@@ -38,6 +38,9 @@ inicializarBaseDeDatos();
 // ==========================================
 const enviarCorreoAuditoria = async (datosMovimiento) => {
     try {
+        if (!resend || !process.env.EMAIL_DESTINO) {
+            return;
+        }
         const { data, error } = await resend.emails.send({
             from: 'Uplost Alertas <onboarding@resend.dev>', // Correo base que te da Resend
             to: process.env.EMAIL_DESTINO,
